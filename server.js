@@ -106,6 +106,24 @@ app.post('/logout', (req,res) => {
         });
     }
 })
+
+app.post('/add-patient', (req, res) => {
+    const { number, fname, lname, consultant_name, stent_insertion_date, scheduled_removal_date } = req.body;
+
+
+    const sql = `INSERT INTO patient (hospital_number, fname, lname, consultant_name, stent_insertion_date, scheduled_removal_date) VALUES (?, ?, ?, ?, ?, ?)`;
+
+    db.query(sql, [number, fname, lname, consultant_name, stent_insertion_date, scheduled_removal_date], (err, result) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: "Internal server error" });
+        }
+        return res.json({
+            status: "success",
+            message: "Patient added successfully"
+        });
+    });
+});
 app.listen(3000, () => {
     console.log("Server is running on port localhost:3000");
 });

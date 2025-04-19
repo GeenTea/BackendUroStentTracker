@@ -124,6 +124,34 @@ app.post('/add-patient', (req, res) => {
         });
     });
 });
+app.get('/patient', (req, res) => {
+    const sql = 'SELECT * FROM patient';
+    db.query(sql, (err, result) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: "Internal server error" });
+        }
+        // Убедитесь, что возвращаем массив
+        return res.json(Array.isArray(result) ? result : [result]);
+    });
+});
+
+app.post('/edit-patient/:patient_id', (req, res) => {
+    const id = req.params.patient_id; // Not req.params.id
+    const sql =
+        "UPDATE patient SET hospital_number = ?, fname = ?, lname = ?, consultant_name = ?, stent_insertion_date = ?, scheduled_removal_date = ? WHERE patient_id = ?";
+    const { hospital_number, fname, lname, consultant_name, stent_insertion_date, scheduled_removal_date } = req.body;
+    db.query(sql, [hospital_number, fname, lname, consultant_name, stent_insertion_date, scheduled_removal_date, id], (err, result) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: "Internal server error" });
+        }
+        return res.json({
+            status: "success",
+            message: "Patient updated successfully"
+        });
+    });
+})
 app.listen(3000, () => {
     console.log("Server is running on port localhost:3000");
 });

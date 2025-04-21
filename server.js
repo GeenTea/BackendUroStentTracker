@@ -152,6 +152,20 @@ app.post('/edit-patient/:patient_id', (req, res) => {
         });
     });
 })
+app.delete('/delete-patient/:patient_id', (req, res) => {
+    const patient_id = req.params.patient_id;
+    const sql = "DELETE FROM patient WHERE patient_id = ?";
+    db.query(sql, [patient_id], (err, result) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: "Internal server error" });
+        }
+        return res.json({
+            status: "success",
+            message: "Patient deleted successfully"
+        });
+    });
+});
 app.listen(3000, () => {
     console.log("Server is running on port localhost:3000");
 });

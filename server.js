@@ -7,16 +7,16 @@ const session = require('express-session');
 app.use(express.json());
 app.use(cors(
     {
-        origin: "http://localhost:5173", // Замените на ваш фронтенд адрес
+        origin: "http://localhost:5173", // Replace with your frontend address
         credentials: true,
     }
 ));
 
 const db = mysql.createConnection({
-    host: '127.0.0.1', // Убрали порт отсюда
-    port: 3306,        // Добавили порт отдельно
+    host: '127.0.0.1',
+    port: 3306,
     user: 'root',
-    password: 'TheHystoryofArthurMorgan1889',
+    password: 'TheHystoryofArthurMorgan1889', /*add your database password*/
     database: 'urostenttracker',
 });
 
@@ -30,7 +30,7 @@ db.connect(err => {
 });
 
 app.use(session({
-    secret: process.env.JWT_SECRET || 'skibidi', // Замените на ваш секретный ключ
+    secret: process.env.JWT_SECRET || 'skibidi', // Replace with your secret key
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -45,7 +45,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
-    const { username, password } = req.body; // Изменили req.query на req.body
+    const { username, password } = req.body;
     const sql = `SELECT * FROM users WHERE username = ? AND password = ?`;
 
     db.query(sql, [username, password], (err, result) => {
